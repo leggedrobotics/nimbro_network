@@ -104,3 +104,6 @@ Friedrich Ebert-Allee 144
 53113 Bonn
 ```
 
+## RSL - Build Status
+
+[![Build Status](https://ci.leggedrobotics.com/buildStatus/icon?job=github_leggedrobotics/nimbro_network/master)](https://ci.leggedrobotics.com/job/github_leggedrobotics/job/nimbro_network/job/master/)
