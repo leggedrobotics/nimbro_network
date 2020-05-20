@@ -1,7 +1,7 @@
 <launch>
 	<arg name="target" default="localhost" />
 
-	<!-- The UDP sender node -->
+	<!-- The TCP sender node -->
 	<node name="tcp_sender" pkg="nimbro_topic_transport" type="tcp_sender" output="screen">
 
 		<!-- The destination host name or IP address -->

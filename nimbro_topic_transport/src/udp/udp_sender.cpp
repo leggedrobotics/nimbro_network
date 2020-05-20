@@ -111,6 +111,15 @@ UDPSender::UDPSender()
 	XmlRpc::XmlRpcValue list;
 	nh.getParam("topics", list);
 
+ std::string topicPrefix;
+ if (nh.hasParam("topic_prefix"))
+ {
+  nh.getParam("topic_prefix", topicPrefix);
+ } else
+ {
+  topicPrefix = "";
+ }
+
 	ROS_ASSERT(list.getType() == XmlRpc::XmlRpcValue::TypeArray);
 
 	for(int32_t i = 0; i < list.size(); ++i)
@@ -140,7 +149,9 @@ UDPSender::UDPSender()
 		if(list[i].hasMember("type"))
 			type = (std::string)(list[i]["type"]);
 
-		TopicSender* sender = new TopicSender(this, &nh, list[i]["name"], rate, resend, flags, enabled, type);
+  std::string topic = list[i]["name"];
+  topic = topicPrefix + topic;
+		TopicSender* sender = new TopicSender(this, &nh, topic, rate, resend, flags, enabled, type);
 
 		if(m_relayMode)
 			sender->setDirectTransmissionEnabled(false);
@@ -348,4 +359,3 @@ int main(int argc, char** argv)
 
 	return 0;
 }
-

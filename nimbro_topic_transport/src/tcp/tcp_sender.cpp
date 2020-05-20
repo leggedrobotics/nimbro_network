@@ -64,6 +64,15 @@ TCPSender::TCPSender()
 	XmlRpc::XmlRpcValue list;
 	m_nh.getParam("topics", list);
 
+ std::string topicPrefix;
+ if (m_nh.hasParam("topic_prefix"))
+ {
+  m_nh.getParam("topic_prefix", topicPrefix);
+ } else
+ {
+  topicPrefix = "";
+ }
+
 	ROS_ASSERT(list.getType() == XmlRpc::XmlRpcValue::TypeArray);
 
 	for(int32_t i = 0; i < list.size(); ++i)
@@ -74,6 +83,7 @@ TCPSender::TCPSender()
 		ROS_ASSERT(entry.hasMember("name"));
 
 		std::string topic = entry["name"];
+  topic = topicPrefix + topic;
 		int flags = 0;
 
 		if(entry.hasMember("compress") && ((bool)entry["compress"]) == true)
@@ -148,7 +158,7 @@ TCPSender::TCPSender()
 		boost::bind(&TCPSender::updateStats, this)
 	);
 	m_statsTimer.start();
-}	
+}
 
 TCPSender::~TCPSender()
 {
@@ -403,4 +413,3 @@ int main(int argc, char** argv)
 
 	return 0;
 }
-
