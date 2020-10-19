@@ -7,7 +7,6 @@ option(NIMBRO_BUILD_QT "Whether to compile QT based components" TRUE)
 find_package(catkin REQUIRED COMPONENTS
 	roscpp
 	topic_tools
-	rostest
 	message_generation
 )
 
@@ -167,35 +166,6 @@ if(NIMBRO_BUILD_QT)
     ${QT_LIBRARIES}
     yaml-cpp
   )
-endif()
-
-# Tests
-if(catch_ros_FOUND)
-	include_directories(${catch_ros_INCLUDE_DIRS})
-
-	catch_add_rostest_node(test_comm
-		test/test_comm.cpp
-	)
-	target_link_libraries(test_comm
-		${catkin_LIBRARIES}
-	)
-
-	add_rostest(test/topic_transport.test ARGS protocol:=udp)
-	add_rostest(test/topic_transport.test ARGS protocol:=tcp)
-
-	if(OPENFEC_PATH)
-		add_rostest(test/topic_transport.test ARGS protocol:=udp fec:=true)
-	endif()
-
-	catch_add_rostest_node(test_bidirectional
-		test/test_bidirectional.cpp
-	)
-	target_link_libraries(test_bidirectional
-		${catkin_LIBRARIES}
-	)
-
-	add_rostest(test/bidirectional.test ARGS allow_bidirectional:=true)
-	add_rostest(test/bidirectional.test ARGS allow_bidirectional:=false)
 endif()
 
 #install
