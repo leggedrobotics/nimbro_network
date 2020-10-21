@@ -37,8 +37,6 @@ if(config_server_FOUND)
 	add_definitions(-DWITH_CONFIG_SERVER=1)
 endif()
 
-find_package(catch_ros)
-
 # If OpenFEC is available, we can enable FEC for the UDP sender
 set(DEFAULT_OPENFEC_PATH /opt/openfec_v1.4.2)
 set(OPENFEC_PATH "" CACHE PATH "Path to OpenFEC (optional)")
