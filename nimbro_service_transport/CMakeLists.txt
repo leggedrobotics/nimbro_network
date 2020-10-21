@@ -11,8 +11,6 @@ find_package(catkin REQUIRED COMPONENTS
 	message_generation
 )
 
-find_package(catch_ros)
-
 add_message_files(FILES
 	ServiceStatus.msg
 )
