@@ -35,6 +35,7 @@ private:
 	std::string m_host;
 	std::string m_remote;
 	int m_remotePort;
+        std::string m_servicePrefix;
 };
 
 }

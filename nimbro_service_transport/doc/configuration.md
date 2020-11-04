@@ -23,6 +23,7 @@ Required:
 Optional:
  - `timeout` (float): Timeout after which a service call is considered as failed
    (UDP only, default: 10.0)
+ - `service_prefix` (string): prepend service_prefix before advertised service names (TCP only, default is empty string). This is a feature to allow to prefix service names with a string without changing the service name on the server side. Therefore the `services` parameter `name` must match the name advertised on the server side.
 
 Service configuration
 ---------------------
