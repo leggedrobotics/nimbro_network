@@ -47,7 +47,7 @@ private:
 
 	std::list<RequestRecord*> m_requests;
 
-	double m_timeout;
+	int m_timeout;
 
 	std::string m_remote;
 	int m_remotePort;

@@ -21,8 +21,8 @@ Required:
  - `services` (list): List of services to advertise & transmit (see below)
 
 Optional:
- - `timeout` (float): Timeout after which a service call is considered as failed
-   (UDP only, default: 10.0)
+ - `timeout` (int): Timeout after which a service call is considered as failed
+   (UDP only, default: 5)
 
 Service configuration
 ---------------------
