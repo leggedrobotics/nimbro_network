@@ -1,8 +1,9 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0.2)
 
 project(nimbro_service_transport)
 
-option(NIMBRO_BUILD_QT "Whether to compile QT based components" TRUE)
+# Note: This option cannot be turned on currently as qt-4 is not available in 20.04
+option(NIMBRO_BUILD_QT "Whether to compile QT based components" OFF)
 
 find_package(catkin REQUIRED COMPONENTS
 	roscpp
@@ -27,7 +28,7 @@ catkin_package()
 
 include_directories(${catkin_INCLUDE_DIRS})
 
-add_definitions(-std=c++11)
+add_definitions(-std=c++14)
 
 add_executable(service_server
 	src/tcp/service_server.cpp

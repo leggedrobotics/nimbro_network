@@ -65,7 +65,7 @@ UDPClient::UDPClient()
 
 	m_host = hostnameBuf;
 
-	m_nh.param("timeout", m_timeout, 5.0);
+	m_nh.param("timeout", m_timeout, 5);
 
 	// Resolve remote address
 	addrinfo hints;
