@@ -42,10 +42,14 @@ Subscriber::Subscriber(const Topic::Ptr& topic, ros::NodeHandle& nh)
 	if(topic->config.hasMember("queue"))
 		queue_length = topic->config["queue"];
 
+	std::string topicPrefix = "";
+	if(topic->config.hasMember("topic_prefix"))
+		topicPrefix = static_cast<std::string>(topic->config["topic_prefix"]);
+
 	ros::SubscribeOptions ops;
 	boost::function<void(const topic_tools::ShapeShifter::ConstPtr&)> func
 		= boost::bind(&Subscriber::handleData, this, _1);
-	ops.initByFullCallbackType(topic->name, queue_length, func);
+	ops.initByFullCallbackType(topicPrefix + topic->name, queue_length, func);
 
 	m_subscriber = nh.subscribe(ops);
 

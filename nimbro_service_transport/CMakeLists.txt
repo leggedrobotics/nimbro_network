@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0.2)
 
 project(nimbro_service_transport)
 
@@ -7,11 +7,9 @@ find_package(catkin REQUIRED COMPONENTS
 	roslib
 	topic_tools
 	message_generation
-	rostest
 	qt_gui_cpp
 )
 
-find_package(catch_ros)
 
 add_message_files(FILES
 	ServiceStatus.msg
@@ -29,7 +27,7 @@ catkin_package()
 
 include_directories(${catkin_INCLUDE_DIRS})
 
-add_definitions(-std=c++11)
+add_definitions(-std=c++14)
 
 add_executable(service_server
 	src/tcp/service_server.cpp
@@ -66,26 +64,6 @@ target_link_libraries(udp_client
 )
 add_dependencies(udp_client
 	${PROJECT_NAME}_generate_messages_cpp
-)
-
-# GUI
-find_package(Qt5Widgets REQUIRED)
-
-qt5_wrap_cpp(MOC_SRCS
-	src/gui/service_widget.h
-)
-
-add_library(service_widget
-	${MOC_SRCS}
-	src/gui/service_widget.cpp
-)
-
-add_dependencies(service_widget
-	${PROJECT_NAME}_generate_messages_cpp
-)
-
-target_link_libraries(service_widget
-	Qt5::Widgets
 )
 
 # Tests

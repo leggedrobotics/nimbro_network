@@ -41,6 +41,7 @@ Optional:
  - `relay_target_bitrate` (float): Target bitrate for relay mode (UDP only)
  - `relay_control_rate` (float): Check if new packets can be sent in relay mode
    at this rate (UDP only)
+ - `topic_prefix` (string): prepend topic_prefix before subscribing to specified topics `name` (default is empty string). This is a feature to allow to prefix topics names with a string on the sender side while keeping the topic name specified in `name` on the receiver side.
 
 Topic configuration
 -------------------

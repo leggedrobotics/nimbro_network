@@ -5,7 +5,6 @@ project(nimbro_topic_transport)
 find_package(catkin REQUIRED COMPONENTS
 	roscpp
 	topic_tools
-	rostest
 	message_generation
 )
 
@@ -23,7 +22,6 @@ generate_messages(DEPENDENCIES
 catkin_package()
 include_directories(${catkin_INCLUDE_DIRS})
 
-find_package(catch_ros)
 
 # Find zstd
 find_package(PkgConfig)
@@ -32,7 +30,7 @@ pkg_check_modules(ZSTD REQUIRED libzstd>=1.1.4)
 include_directories(${ZSTD_INCLUDE_DIRS})
 include_directories(contrib)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11 -march=native")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++14 -march=native")
 
 add_library(nimbro_topic_transport
 	contrib/wirehair/wirehair.cpp
@@ -84,7 +82,7 @@ target_link_libraries(action_proxy
 )
 
 # GUI
-add_subdirectory(src/gui)
+#add_subdirectory(src/gui)
 
 # Tests
 if(catch_ros_FOUND)

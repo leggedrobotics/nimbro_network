@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0.2)
 
 project(nimbro_tf_throttle)
 
@@ -18,6 +18,7 @@ target_link_libraries(tf_throttle
 	${catkin_LIBRARIES}
 )
 
+#install
 install(TARGETS tf_throttle
 	ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 	LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}

@@ -88,6 +88,7 @@ ServiceClient::ServiceClient()
 	}
 
 	m_nh.param("port", m_remotePort, 6050);
+	m_nh.param("service_prefix", m_servicePrefix, std::string());
 
 	std::string portString = boost::lexical_cast<std::string>(m_remotePort);
 
@@ -141,7 +142,7 @@ ServiceClient::ServiceClient()
 		ops.helper = boost::make_shared<CallbackHelper>(name, this);
 		ops.req_datatype = ops.datatype + "Request";
 		ops.res_datatype = ops.datatype + "Response";
-		ops.service = name;
+		ops.service = m_servicePrefix + name;;
 
 		ROS_DEBUG("Advertising service '%s'", ops.service.c_str());
 
