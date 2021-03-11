@@ -8,13 +8,7 @@
 
 	<node name="receiver" pkg="nimbro_topic_transport" type="receiver" output="screen">
 		<!-- The port to receive packets on -->
-		<param name="port" value="17001" />
-
-		<!-- Remap topics so that sender & receiver do not clash if run on the
-		  same machine. This is not necessary in a typical setup :-)
-		 -->
-		<remap from="/my_first_topic" to="/recv/my_first_topic" />
-		<remap from="/my_second_topic" to="/recv/my_second_topic" />
-		<remap from="/tcp_topic" to="/recv/tcp_topic" />
+		<param name="port" 					value="17001" />
+		<param name="topic_prefix" 	value="/anymal_1" />
 	</node>
 </launch>

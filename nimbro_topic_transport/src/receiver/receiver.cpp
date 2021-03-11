@@ -27,12 +27,15 @@ private:
 	void handleMessage(const Message::ConstPtr& message)
 	{
 		TopicHandler* handler;
+		ros::NodeHandle nh("~");
+		std::string topicPrefix;
+		nh.param("topic_prefix", topicPrefix, std::string());
 		{
 			std::unique_lock<std::mutex> lock(m_topicMutex);
 			auto it = m_topics.find(message->topic->name);
 			if(it == m_topics.end())
 			{
-				std::unique_ptr<TopicHandler> handlerPtr(new TopicHandler(message->topic));
+				std::unique_ptr<TopicHandler> handlerPtr(new TopicHandler(message->topic, topicPrefix));
 
 				handlerPtr->queue = m_threadPool.createInputHandler(
 					std::bind(&TopicHandler::handleMessage, handlerPtr.get(), std::placeholders::_1)
@@ -50,9 +53,9 @@ private:
 
 	struct TopicHandler
 	{
-		TopicHandler(const Topic::ConstPtr& topic)
+		TopicHandler(const Topic::ConstPtr& topic, std::string topicPrefix)
 		 : topic(topic)
-		 , publisher(topic)
+		 , publisher(topic, std::move(topicPrefix))
 		{}
 
 		void handleMessage(const Message::ConstPtr& msg)

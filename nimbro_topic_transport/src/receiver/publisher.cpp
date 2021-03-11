@@ -29,7 +29,8 @@ private:
 namespace nimbro_topic_transport
 {
 
-Publisher::Publisher(const Topic::ConstPtr& topic)
+Publisher::Publisher(const Topic::ConstPtr& topic, std::string topicPrefix) :
+ m_topicPrefix(std::move(topicPrefix))
 {
 }
 
@@ -43,13 +44,14 @@ void Publisher::publish(const Message::ConstPtr& msg)
 
 	if(!m_advertised)
 	{
-		ROS_INFO("Advertising new topic '%s'", msg->topic->name.c_str());
+		auto fullTopicName = m_topicPrefix + msg->topic->name;
+		ROS_INFO("Advertising new topic '%s'", fullTopicName.c_str());
 		m_messageDefinition = topic_info::getMsgDef(msg->type);
 
 		ros::NodeHandle nh;
 
 		ros::AdvertiseOptions options(
-			msg->topic->name,
+			fullTopicName,
 			50,
 			msg->md5,
 			msg->type,

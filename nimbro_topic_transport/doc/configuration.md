@@ -18,6 +18,7 @@ Optional:
    (UDP only, default true)
  - `fec` (bool): Enable Forward Error correction (UDP only, default false)
  - `label` (string): Display a label in the visualization GUIs
+ - `topic_prefix` (string): prepend topic_prefix before advertised topic names
 
 Sender parameters
 -----------------

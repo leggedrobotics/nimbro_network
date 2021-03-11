@@ -14,7 +14,7 @@ namespace nimbro_topic_transport
 class Publisher
 {
 public:
-	Publisher(const Topic::ConstPtr& topic);
+	Publisher(const Topic::ConstPtr& topic, std::string topicPrefix);
 	~Publisher();
 
 	void publish(const Message::ConstPtr& msg);
@@ -34,6 +34,8 @@ private:
 	ros::Publisher m_pub;
 
 	std::string m_messageDefinition;
+
+	std::string m_topicPrefix;
 };
 
 }
