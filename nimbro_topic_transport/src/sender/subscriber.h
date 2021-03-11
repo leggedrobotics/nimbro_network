@@ -36,9 +36,19 @@ private:
 	ros::Time m_lastTime;
 	ros::Timer m_resendTimer;
 	Message::ConstPtr m_lastMsg;
+	uint32_t m_counter = 0;
 	//@}
 
-	uint32_t m_counter = 0;
+	//! @name Initial bursts control logic
+	//@{
+	void burstUponFirstReceive();
+
+	ros::Duration m_durationBetweenInitialBursts = ros::Duration(0.0);
+	uint32_t messagesToBurstUponFirstReceive = 0;
+	ros::Time m_lastTimeInitialBursts;
+	ros::Timer m_resendTimerInitialBursts;
+	uint32_t m_counterInitialBursts = 0;
+	//@}
 
 	std::string m_topicPrefix;
 };

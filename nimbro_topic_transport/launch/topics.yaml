@@ -6,3 +6,6 @@ udp_topics:
 
 tcp_topics:
  - name: "/tcp_topic"
+ - name: "/tcp_topic/to_burst"
+   messages_to_burst_upon_first_receive: 5
+   frequency_of_bursting_upon_first_receive: 1.0

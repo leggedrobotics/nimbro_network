@@ -61,6 +61,22 @@ Subscriber::Subscriber(const Topic::Ptr& topic, ros::NodeHandle& nh, const std::
 			m_resendTimer = nh.createTimer(m_durationBetweenMsgs, cb);
 		}
 	}
+
+	// Initialize bursting control
+	if(topic->config.hasMember("messages_to_burst_upon_first_receive") &&
+     topic->config.hasMember("frequency_of_bursting_upon_first_receive"))
+	{
+		int messagesFromXml = topic->config["messages_to_burst_upon_first_receive"];
+		messagesToBurstUponFirstReceive = messagesFromXml;
+		if (messagesToBurstUponFirstReceive > 0)
+		{
+			double frequency_of_bursting = topic->config["frequency_of_bursting_upon_first_receive"];
+			m_durationBetweenInitialBursts = ros::Duration(1.0 / frequency_of_bursting);
+
+			auto cb = std::bind(&Subscriber::burstUponFirstReceive, this);
+			m_resendTimerInitialBursts = nh.createTimer(m_durationBetweenInitialBursts, cb);
+		}
+	}
 }
 
 void Subscriber::registerCallback(const Callback& cb)
@@ -115,6 +131,30 @@ void Subscriber::resend()
 
 	for(auto& cb : m_callbacks)
 		cb(msg);
+}
+
+void Subscriber::burstUponFirstReceive()
+{
+	if(!m_lastMsg)
+		return;
+
+	ros::Time now = ros::Time::now();
+	if(now - m_lastTimeInitialBursts < m_durationBetweenInitialBursts)
+		return;
+
+	// TODO: Can we avoid the copy here? We do need to increment the counter, though...
+	Message::Ptr msg(new Message(*m_lastMsg));
+	msg->counter = m_counterInitialBursts++;
+
+	m_lastMsg = msg;
+
+	for(auto& cb : m_callbacks)
+		cb(msg);
+
+	if (m_counterInitialBursts >= messagesToBurstUponFirstReceive)
+	{
+		m_resendTimerInitialBursts.stop();
+	}
 }
 
 }
