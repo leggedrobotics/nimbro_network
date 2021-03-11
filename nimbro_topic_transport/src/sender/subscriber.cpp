@@ -34,8 +34,8 @@ private:
 
 }
 
-Subscriber::Subscriber(const Topic::Ptr& topic, ros::NodeHandle& nh)
- : m_topic(topic)
+Subscriber::Subscriber(const Topic::Ptr& topic, ros::NodeHandle& nh, const std::string& topicPrefix)
+ : m_topic(topic), m_topicPrefix(topicPrefix)
 {
 	// Subscribe
 	int queue_length = 1;
@@ -45,7 +45,7 @@ Subscriber::Subscriber(const Topic::Ptr& topic, ros::NodeHandle& nh)
 	ros::SubscribeOptions ops;
 	boost::function<void(const topic_tools::ShapeShifter::ConstPtr&)> func
 		= boost::bind(&Subscriber::handleData, this, _1);
-	ops.initByFullCallbackType(topic->name, queue_length, func);
+	ops.initByFullCallbackType(topicPrefix + topic->name, queue_length, func);
 
 	m_subscriber = nh.subscribe(ops);
 

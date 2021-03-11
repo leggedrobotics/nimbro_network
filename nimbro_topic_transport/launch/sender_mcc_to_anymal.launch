@@ -12,10 +12,13 @@
 	  See udp_receiver.launch for the receiving part.
 	-->
 
-	<arg name="target" default="localhost" />
+	<arg name="target" 				default="localhost" />
+	<arg name="topic_prefix" 	default="/anymal_1" />
 
 	<!-- The UDP sender node -->
 	<node name="sender" pkg="nimbro_topic_transport" type="sender" output="screen">
+
+		<param name="topic_prefix" 	value="$(arg topic_prefix)" />
 
 		<!-- The destination host name or IP address -->
 		<param name="destination_addr" value="$(arg target)" />
@@ -25,15 +28,15 @@
 		<rosparam command="load" file="$(find nimbro_topic_transport)/launch/topics.yaml" />
 	</node>
 
-	<node name="anymal_talker_udp" pkg="roscpp_tutorials" type="talker" output="screen">
-		<remap from="/chatter" to="/my_first_topic"/>
+	<node name="mcc_talker_udp" pkg="roscpp_tutorials" type="talker" output="screen">
+		<remap from="/chatter" to="/$(arg topic_prefix)/my_first_topic"/>
 	</node>
 
-	<node name="anymal_talker_udp_2" pkg="roscpp_tutorials" type="talker" output="screen">
-		<remap from="/chatter" to="/my_second_topic"/>
+	<node name="mcc_talker_udp_2" pkg="roscpp_tutorials" type="talker" output="screen">
+		<remap from="/chatter" to="/$(arg topic_prefix)/my_second_topic"/>
 	</node>
 
-	<node name="anymal_talker_tc" pkg="roscpp_tutorials" type="talker" output="screen">
-		<remap from="/chatter" to="/tcp_topic"/>
+	<node name="mcc_talker_tc" pkg="roscpp_tutorials" type="talker" output="screen">
+		<remap from="/chatter" to="/$(arg topic_prefix)/tcp_topic"/>
 	</node>
 </launch>

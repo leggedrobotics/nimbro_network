@@ -19,12 +19,15 @@ public:
 	Sender()
 	 : m_nh("~")
 	{
+		std::string topicPrefix;
+		m_nh.param("topic_prefix", topicPrefix, std::string());
+
 		if(m_nh.hasParam("tcp_topics"))
 		{
 			XmlRpc::XmlRpcValue topicList;
 			m_nh.getParam("tcp_topics", topicList);
 
-			initTCP(topicList);
+			initTCP(topicList, topicPrefix);
 		}
 
 		if(m_nh.hasParam("udp_topics"))
@@ -32,14 +35,14 @@ public:
 			XmlRpc::XmlRpcValue topicList;
 			m_nh.getParam("udp_topics", topicList);
 
-			initUDP(topicList);
+			initUDP(topicList, topicPrefix);
 		}
 
 		ROS_INFO("Sender initialized, listening on %lu topics.", m_subs.size());
 	}
 
 private:
-	void initTCP(XmlRpc::XmlRpcValue& topicList)
+	void initTCP(XmlRpc::XmlRpcValue& topicList, const std::string& topicPrefix)
 	{
 		m_tcp_sender.reset(new TCPSender);
 
@@ -57,7 +60,7 @@ private:
 			topic->name = static_cast<std::string>(entry["name"]);
 			topic->config = entry;
 
-			std::unique_ptr<Subscriber> sub(new Subscriber(topic, m_nh));
+			std::unique_ptr<Subscriber> sub(new Subscriber(topic, m_nh, topicPrefix));
 
 			unsigned int level = Compressor::getCompressionLevel(*topic);
 			if(level != 0)
@@ -82,7 +85,7 @@ private:
 		}
 	}
 
-	void initUDP(XmlRpc::XmlRpcValue& topicList)
+	void initUDP(XmlRpc::XmlRpcValue& topicList, const std::string& topicPrefix)
 	{
 		m_udp_sender.reset(new UDPSender);
 		m_packetizer.reset(new Packetizer);
@@ -101,7 +104,7 @@ private:
 			topic->name = static_cast<std::string>(entry["name"]);
 			topic->config = entry;
 
-			std::unique_ptr<Subscriber> sub(new Subscriber(topic, m_nh));
+			std::unique_ptr<Subscriber> sub(new Subscriber(topic, m_nh, topicPrefix));
 
 			auto packetizer = std::make_shared<TopicPacketizer>(m_packetizer, topic);
 
