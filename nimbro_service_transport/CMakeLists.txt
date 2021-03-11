@@ -94,7 +94,7 @@ if(catch_ros_FOUND)
 	add_rostest(test/test_tcp.test)
 endif()
 
-install(TARGETS service_server service_client udp_server udp_client service_widget
+install(TARGETS service_server service_client udp_server udp_client
 	ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 	LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 	RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
