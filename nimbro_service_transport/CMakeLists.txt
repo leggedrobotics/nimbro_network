@@ -7,7 +7,6 @@ find_package(catkin REQUIRED COMPONENTS
 	roslib
 	topic_tools
 	message_generation
-	qt_gui_cpp
 )
 
 
