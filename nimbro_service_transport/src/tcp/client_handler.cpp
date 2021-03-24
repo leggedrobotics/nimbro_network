@@ -90,7 +90,7 @@ void ClientHandler::run()
 			for(int i = 0; i < msg_request.num_bytes; ++i)
 				ROS_INFO(" %d: 0x%02X (%c)", i, msg_request.buf.get()[i], msg_request.buf.get()[i]);
 #endif
-
+			ROS_INFO("[NimbroServiceTranposrt] Calling service '%s", service.c_str());
 			bool ok = client.call(msg_request, msg_response, std::string("*"));
 
 			topic_tools::ShapeShifter response;
@@ -227,7 +227,7 @@ void ClientHandler::sendAvailableServices()
 
 		desc.name_length = name.length();
 		desc.type_length = type.length();
-		
+
 		ROS_INFO("service '%s'", name.c_str());
 
 		pushIntoVector(&response, &desc, sizeof(desc));
