@@ -14,8 +14,8 @@
 	<depend>roscpp</depend>
 	<depend>topic_tools</depend>
 	<depend>rqt_gui_cpp</depend>
-	<depend>libqt4-dev</depend>
-	<depend>qt4-qmake</depend>
+	<depend>qt5-default</depend>
+	<depend>qt5-qmake</depend>
 
 	<export>
 		<rqt_gui plugin="${prefix}/plugin.xml" />

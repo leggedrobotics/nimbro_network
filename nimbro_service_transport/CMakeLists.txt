@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.1)
 
 project(nimbro_service_transport)
 
-option(NIMBRO_BUILD_QT "Whether to compile QT based components" TRUE)
+option(NIMBRO_BUILD_QT "Whether to compile QT based components" OFF)
 
 find_package(catkin REQUIRED COMPONENTS
 	roscpp
@@ -68,15 +68,12 @@ add_dependencies(udp_client
 
 # GUI
 if(NIMBRO_BUILD_QT)
-  find_package(Qt4 REQUIRED)
-  include(${QT_USE_FILE})
+  find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 
-  qt4_wrap_cpp(MOC_SRCS
-    src/gui/service_widget.h
-  )
+	set(CMAKE_AUTOMOC ON)
+	set(CMAKE_AUTOUIC ON)
 
   add_library(service_widget
-    ${MOC_SRCS}
     src/gui/service_widget.cpp
   )
 
@@ -85,11 +82,15 @@ if(NIMBRO_BUILD_QT)
   )
 
   target_link_libraries(service_widget
-    ${QT_LIBRARIES}
+		Qt5::Widgets
   )
 endif()
 
 #install
+install(FILES plugin.xml
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
+
 install(TARGETS service_server
                 service_client
                 udp_server

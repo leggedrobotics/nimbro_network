@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.1)
 
 project(nimbro_topic_transport)
 
-option(NIMBRO_BUILD_QT "Whether to compile QT based components" ON)
+option(NIMBRO_BUILD_QT "Whether to compile QT based components" OFF)
 
 find_package(catkin REQUIRED COMPONENTS
 	roscpp
@@ -138,7 +138,6 @@ if(NIMBRO_BUILD_QT)
   )
 
   add_dependencies(topic_gui
-		Qt5::Widgets
     ${PROJECT_NAME}_generate_messages_cpp
   )
 
@@ -147,7 +146,6 @@ if(NIMBRO_BUILD_QT)
   )
 
   add_dependencies(bandwidth_gui
-		Qt5::Widgets
     ${PROJECT_NAME}_generate_messages_cpp
   )
 
