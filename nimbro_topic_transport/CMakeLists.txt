@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.1)
 
 project(nimbro_topic_transport)
 
-option(NIMBRO_BUILD_QT "Whether to compile QT based components" TRUE)
+option(NIMBRO_BUILD_QT "Whether to compile QT based components" ON)
 
 find_package(catkin REQUIRED COMPONENTS
 	roscpp
@@ -122,51 +122,46 @@ target_link_libraries(action_proxy
 
 # GUI
 if(NIMBRO_BUILD_QT)
-  find_package(Qt4 REQUIRED)
-  include(${QT_USE_FILE})
+  find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 
-  qt4_wrap_cpp(MOC_SRCS
-    src/gui/topic_gui.h
-    src/gui/dot_widget.h
-  )
-
-  qt4_wrap_cpp(BAND_MOC_SRCS
-    src/gui/bandwidth_gui.h
-    src/gui/contrib/qcustomplot/qcustomplot.h
-  )
+	set(CMAKE_AUTOMOC ON)
+	set(CMAKE_AUTOUIC ON)
 
   add_library(topic_gui
-    ${MOC_SRCS}
     src/gui/topic_gui.cpp
     src/gui/dot_widget.cpp
   )
 
   add_library(bandwidth_gui
-    ${BAND_MOC_SRCS}
     src/gui/bandwidth_gui.cpp
     src/gui/contrib/qcustomplot/qcustomplot.cpp
   )
 
-
   add_dependencies(topic_gui
+		Qt5::Widgets
     ${PROJECT_NAME}_generate_messages_cpp
   )
 
   target_link_libraries(topic_gui
-    ${QT_LIBRARIES}
+    Qt5::Widgets
   )
 
   add_dependencies(bandwidth_gui
+		Qt5::Widgets
     ${PROJECT_NAME}_generate_messages_cpp
   )
 
   target_link_libraries(bandwidth_gui
-    ${QT_LIBRARIES}
+    Qt5::Widgets
     yaml-cpp
   )
 endif()
 
 #install
+install(FILES bandwidth_plugin.xml rqt_plugin.xml
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
+
 install(TARGETS udp_receiver tcp_receiver udp_sender tcp_sender
         ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
         LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}

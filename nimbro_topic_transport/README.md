@@ -73,7 +73,7 @@ Dependencies
 
 Needed dependecies to build this package:
 ```
-sudo apt-get install qt4-dev-tools
+sudo apt-get install qt5-default
 ```
 
 [1]: http://openfec.org/
