@@ -30,7 +30,7 @@ namespace nimbro_topic_transport
 {
 
 Publisher::Publisher(const Topic::ConstPtr& topic, std::string topicPrefix) :
- m_topicPrefix(std::move(topicPrefix))
+ m_topicPrefix(topicPrefix)
 {
 }
 
@@ -45,7 +45,11 @@ void Publisher::publish(const Message::ConstPtr& msg)
 	if(!m_advertised)
 	{
 		auto fullTopicName = m_topicPrefix + msg->topic->name;
-		ROS_INFO("Advertising new topic '%s'", fullTopicName.c_str());
+		if (!fullTopicName.empty()) {
+			ROS_INFO("Advertising new topic '%s'", fullTopicName.c_str());
+		} else {
+			ROS_WARN("Received new topic for prefix '%s' has an empty topic->name - this is strange!", m_topicPrefix.c_str());
+		}
 		m_messageDefinition = topic_info::getMsgDef(msg->type);
 
 		ros::NodeHandle nh;
