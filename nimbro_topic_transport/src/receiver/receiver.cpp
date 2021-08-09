@@ -55,7 +55,7 @@ private:
 	{
 		TopicHandler(const Topic::ConstPtr& topic, std::string topicPrefix)
 		 : topic(topic)
-		 , publisher(topic, std::move(topicPrefix))
+		 , publisher(topic, topicPrefix)
 		{}
 
 		void handleMessage(const Message::ConstPtr& msg)
