@@ -3,7 +3,7 @@
 
 #include <ros/node_handle.h>
 #include <ros/ros.h>
-#include <std_srvs/SetBool.h>
+#include <std_srvs/Trigger.h>
 
 #include "subscriber.h"
 #include "tcp_sender.h"
@@ -23,7 +23,8 @@ public:
 	{
 		std::string topicPrefix;
 		m_nh.param("topic_prefix", topicPrefix, std::string());
-		m_setSendingLowPriorityTopicService = m_nh.advertiseService("set_sending_low_priority_topics", &Sender::setSendingLowPriorityTopics, this);
+		m_enableSendingLowPriorityTopicService = m_nh.advertiseService("enable_sending_low_priority_topics", &Sender::enableSendingLowPriorityTopics, this);
+		m_disableSendingLowPriorityTopicService = m_nh.advertiseService("disable_sending_low_priority_topics", &Sender::disableSendingLowPriorityTopics, this);
 
 		if(m_nh.hasParam("tcp_topics"))
 		{
@@ -135,12 +136,21 @@ private:
 		}
 	}
 
-	bool setSendingLowPriorityTopics(std_srvs::SetBool::Request& request, std_srvs::SetBool::Response& response) {
+	bool enableSendingLowPriorityTopics(std_srvs::Trigger::Request& request, std_srvs::Trigger::Response& response) {
     for (auto& sub : m_subs) {
-			sub->setSendingLowPriorityTopic(request.data);
+			sub->setSendingLowPriorityTopic(true);
 		}
 		response.success = true;
-		ROS_INFO("[sender::setSendingLowPriorityTopics]: set sending low priority topics to %d", request.data);
+		ROS_INFO("[sender::enableSendingLowPriorityTopics]: enable sending low priority topics");
+    return true;
+  }
+
+	bool disableSendingLowPriorityTopics(std_srvs::Trigger::Request& request, std_srvs::Trigger::Response& response) {
+    for (auto& sub : m_subs) {
+			sub->setSendingLowPriorityTopic(false);
+		}
+		response.success = true;
+		ROS_INFO("[sender::disableSendingLowPriorityTopics]: disable sending low priority topics");
     return true;
   }
 
@@ -153,7 +163,8 @@ private:
 	ThreadPool m_threadPool;
 	std::shared_ptr<Packetizer> m_packetizer;
 
-	ros::ServiceServer m_setSendingLowPriorityTopicService;
+	ros::ServiceServer m_enableSendingLowPriorityTopicService;
+	ros::ServiceServer m_disableSendingLowPriorityTopicService;
 };
 
 }
