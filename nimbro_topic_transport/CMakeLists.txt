@@ -3,9 +3,10 @@ cmake_minimum_required(VERSION 3.1)
 project(nimbro_topic_transport)
 
 find_package(catkin REQUIRED COMPONENTS
-	roscpp
-	topic_tools
 	message_generation
+	roscpp
+	std_srvs
+	topic_tools
 )
 
 add_message_files(FILES

@@ -43,6 +43,7 @@ Optional:
  - `relay_control_rate` (float): Check if new packets can be sent in relay mode
    at this rate (UDP only)
  - `topic_prefix` (string): prepend topic_prefix before subscribing to specified topics `name` (default is empty string). This is a feature to allow to prefix topics names with a string on the sender side while keeping the topic name specified in `name` on the receiver side.
+ - `low_priority_topic` (bool): if true, the topic will not be sent if service call `~/set_sending_low_priority_topics` is set to true (UDP only).
 
 Topic configuration
 -------------------

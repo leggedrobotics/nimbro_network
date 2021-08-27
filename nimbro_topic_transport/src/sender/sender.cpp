@@ -2,6 +2,8 @@
 // Author: Max Schwarz <max.schwarz@uni-bonn.de>
 
 #include <ros/node_handle.h>
+#include <ros/ros.h>
+#include <std_srvs/SetBool.h>
 
 #include "subscriber.h"
 #include "tcp_sender.h"
@@ -21,6 +23,7 @@ public:
 	{
 		std::string topicPrefix;
 		m_nh.param("topic_prefix", topicPrefix, std::string());
+		m_setSendingLowPriorityTopicService = m_nh.advertiseService("set_sending_low_priority_topics", &Sender::setSendingLowPriorityTopics, this);
 
 		if(m_nh.hasParam("tcp_topics"))
 		{
@@ -132,6 +135,15 @@ private:
 		}
 	}
 
+	bool setSendingLowPriorityTopics(std_srvs::SetBool::Request& request, std_srvs::SetBool::Response& response) {
+    for (auto& sub : m_subs) {
+			sub->setSendingLowPriorityTopic(request.data);
+		}
+		response.success = true;
+		ROS_INFO("[sender::setSendingLowPriorityTopics]: set sending low priority topics to %d", request.data);
+    return true;
+  }
+
 	ros::NodeHandle m_nh;
 	std::vector<std::unique_ptr<Subscriber>> m_subs;
 	std::unique_ptr<TCPSender> m_tcp_sender;
@@ -140,6 +152,8 @@ private:
 
 	ThreadPool m_threadPool;
 	std::shared_ptr<Packetizer> m_packetizer;
+
+	ros::ServiceServer m_setSendingLowPriorityTopicService;
 };
 
 }
