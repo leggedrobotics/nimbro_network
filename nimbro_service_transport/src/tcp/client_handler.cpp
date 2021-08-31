@@ -110,6 +110,7 @@ void ClientHandler::run()
         service_thread.join();
       } else {
         ROS_ERROR("[NimbroServiceTransport] Service '%s' timed out!", service.c_str());
+				ROS_ERROR("[NimbroServiceTransport] The service will still be processed if in the callback queue!");
       }
 
 			topic_tools::ShapeShifter response;
