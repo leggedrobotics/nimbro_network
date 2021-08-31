@@ -94,24 +94,24 @@ void ClientHandler::run()
 #endif
 
 			ROS_INFO("[NimbroServiceTransport] Calling service '%s", service.c_str());
-      bool ok = false;
-      service_executed = false;
-      auto service_start_time = std::chrono::system_clock::now();
-      service_thread = boost::thread([&](){
-      	ok = client.call(msg_request, msg_response, std::string("*"));
-      	service_executed = true;
-      });
+		        bool ok = false;
+		        service_executed = false;
+		        auto service_start_time = std::chrono::system_clock::now();
+		        service_thread = boost::thread([&](){
+				ok = client.call(msg_request, msg_response, std::string("*"));
+				service_executed = true;
+		        });
 
-      while(!service_executed && std::chrono::system_clock::now() < service_start_time + service_timeout) {
-        usleep(10000);
-      }
+		        while(!service_executed && std::chrono::system_clock::now() < service_start_time + service_timeout) {
+				usleep(10000);
+		      	}
 
-      if(service_executed) {
-        service_thread.join();
-      } else {
-        ROS_ERROR("[NimbroServiceTransport] Service '%s' timed out!", service.c_str());
+		      	if(service_executed) {
+				service_thread.join();
+		      	} else {
+				ROS_ERROR("[NimbroServiceTransport] Service '%s' timed out!", service.c_str());
 				ROS_ERROR("[NimbroServiceTransport] The service will still be processed if in the callback queue!");
-      }
+		      	}
 
 			topic_tools::ShapeShifter response;
 			ros::serialization::deserializeMessage(msg_response, response);
