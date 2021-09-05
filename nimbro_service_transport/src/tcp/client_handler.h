@@ -27,6 +27,9 @@ private:
 	bool m_gotHeader;
 	ros::Header m_headerBuf;
 	boost::thread m_thread;
+    	boost::thread service_thread;
+    	std::atomic<bool> service_executed ;
+    	const std::chrono::seconds service_timeout{1};
 };
 
 }
