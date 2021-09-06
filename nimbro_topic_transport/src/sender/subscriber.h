@@ -55,7 +55,7 @@ private:
 
 	//! @name stop sending marked topics control logic
 	//@{
-	bool m_stopSendingLowPrioriyTopic = false;
+	bool m_sendLowPrioriyTopic = true;
 	bool m_topicIsLowPriority = false;
 	//@}
 

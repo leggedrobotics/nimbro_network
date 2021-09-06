@@ -35,7 +35,7 @@ private:
 }
 
 Subscriber::Subscriber(const Topic::Ptr& topic, ros::NodeHandle& nh, const std::string& topicPrefix)
- : m_topic(topic), m_stopSendingLowPrioriyTopic(false),  m_topicPrefix(topicPrefix)
+ : m_topic(topic), m_sendLowPrioriyTopic(true),  m_topicPrefix(topicPrefix)
 {
 	// Subscribe
 	int queue_length = 1;
@@ -93,7 +93,7 @@ void Subscriber::registerCallback(const Callback& cb)
 void Subscriber::handleData(const topic_tools::ShapeShifter::ConstPtr& data)
 {
 	ROS_DEBUG("sender: message on topic '%s'", m_topic->name.c_str());
-	if (m_stopSendingLowPrioriyTopic) {
+	if (m_topicIsLowPriority && !m_sendLowPrioriyTopic) {
 		return;
 	}
 
@@ -126,7 +126,7 @@ void Subscriber::handleData(const topic_tools::ShapeShifter::ConstPtr& data)
 
 void Subscriber::resend()
 {
-	if(!m_lastMsg || m_stopSendingLowPrioriyTopic)
+	if(!m_lastMsg || (m_topicIsLowPriority && !m_sendLowPrioriyTopic))
 		return;
 
 	ros::Time now = ros::Time::now();
@@ -170,7 +170,7 @@ void Subscriber::burstUponFirstReceive()
 void Subscriber::setSendingLowPriorityTopic(bool value)
 {
 	if (m_topicIsLowPriority) {
-		m_stopSendingLowPrioriyTopic = value;
+		m_sendLowPrioriyTopic = value;
 	}
 }
 
