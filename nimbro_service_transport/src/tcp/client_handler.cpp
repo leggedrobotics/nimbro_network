@@ -4,6 +4,7 @@
 #include "client_handler.h"
 #include "protocol.h"
 
+#include <chrono>
 #include <ros/console.h>
 #include <ros/master.h>
 #include <ros/service_manager.h>
@@ -48,6 +49,7 @@ static void sureWrite(int fd, const void* src, size_t size)
 ClientHandler::ClientHandler(int fd)
  : m_fd(fd)
  , m_thread(boost::bind(&ClientHandler::run, this))
+ , service_executed(false)
 {
 }
 
@@ -90,8 +92,26 @@ void ClientHandler::run()
 			for(int i = 0; i < msg_request.num_bytes; ++i)
 				ROS_INFO(" %d: 0x%02X (%c)", i, msg_request.buf.get()[i], msg_request.buf.get()[i]);
 #endif
-			ROS_INFO("[NimbroServiceTranposrt] Calling service '%s", service.c_str());
-			bool ok = client.call(msg_request, msg_response, std::string("*"));
+
+			ROS_INFO("[NimbroServiceTransport] Calling service '%s", service.c_str());
+		        bool ok = false;
+		        service_executed = false;
+		        auto service_start_time = std::chrono::system_clock::now();
+		        service_thread = boost::thread([&](){
+				ok = client.call(msg_request, msg_response, std::string("*"));
+				service_executed = true;
+		        });
+
+		        while(!service_executed && std::chrono::system_clock::now() < service_start_time + service_timeout) {
+				usleep(10000);
+		      	}
+
+		      	if(service_executed) {
+				service_thread.join();
+		      	} else {
+				ROS_ERROR("[NimbroServiceTransport] Service '%s' timed out!", service.c_str());
+				ROS_ERROR("[NimbroServiceTransport] The service will still be processed if in the callback queue!");
+		      	}
 
 			topic_tools::ShapeShifter response;
 			ros::serialization::deserializeMessage(msg_response, response);
