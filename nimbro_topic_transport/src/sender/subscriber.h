@@ -20,6 +20,9 @@ public:
 	Subscriber(const Topic::Ptr& topic, ros::NodeHandle& nh, const std::string& topicPrefix);
 
 	void registerCallback(const Callback& cb);
+
+	void setSendingLowPriorityTopic(bool value);
+
 private:
 	void handleData(const topic_tools::ShapeShifter::ConstPtr& data);
 
@@ -48,6 +51,12 @@ private:
 	ros::Time m_lastTimeInitialBursts;
 	ros::Timer m_resendTimerInitialBursts;
 	uint32_t m_counterInitialBursts = 0;
+	//@}
+
+	//! @name stop sending marked topics control logic
+	//@{
+	bool m_sendLowPrioriyTopic = true;
+	bool m_topicIsLowPriority = false;
 	//@}
 
 	std::string m_topicPrefix;

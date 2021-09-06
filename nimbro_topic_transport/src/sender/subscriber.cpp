@@ -35,7 +35,7 @@ private:
 }
 
 Subscriber::Subscriber(const Topic::Ptr& topic, ros::NodeHandle& nh, const std::string& topicPrefix)
- : m_topic(topic), m_topicPrefix(topicPrefix)
+ : m_topic(topic), m_sendLowPrioriyTopic(true),  m_topicPrefix(topicPrefix)
 {
 	// Subscribe
 	int queue_length = 1;
@@ -77,6 +77,12 @@ Subscriber::Subscriber(const Topic::Ptr& topic, ros::NodeHandle& nh, const std::
 			m_resendTimerInitialBursts = nh.createTimer(m_durationBetweenInitialBursts, cb);
 		}
 	}
+
+	// See if topic is low priority
+	if (topic->config.hasMember("low_priority_topic"))
+	{
+		m_topicIsLowPriority = topic->config["low_priority_topic"];
+	}
 }
 
 void Subscriber::registerCallback(const Callback& cb)
@@ -87,6 +93,10 @@ void Subscriber::registerCallback(const Callback& cb)
 void Subscriber::handleData(const topic_tools::ShapeShifter::ConstPtr& data)
 {
 	ROS_DEBUG("sender: message on topic '%s'", m_topic->name.c_str());
+	if (m_topicIsLowPriority && !m_sendLowPrioriyTopic) {
+		return;
+	}
+
 	auto msg = std::make_shared<Message>();
 
 	// Serialize the shape shifter
@@ -116,7 +126,7 @@ void Subscriber::handleData(const topic_tools::ShapeShifter::ConstPtr& data)
 
 void Subscriber::resend()
 {
-	if(!m_lastMsg)
+	if(!m_lastMsg || (m_topicIsLowPriority && !m_sendLowPrioriyTopic))
 		return;
 
 	ros::Time now = ros::Time::now();
@@ -154,6 +164,13 @@ void Subscriber::burstUponFirstReceive()
 	if (m_counterInitialBursts >= messagesToBurstUponFirstReceive)
 	{
 		m_resendTimerInitialBursts.stop();
+	}
+}
+
+void Subscriber::setSendingLowPriorityTopic(bool value)
+{
+	if (m_topicIsLowPriority) {
+		m_sendLowPrioriyTopic = value;
 	}
 }
 
