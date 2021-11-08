@@ -6,10 +6,9 @@
 	  See udp_sender.launch for the sender part.
 	-->
 
-	<node name="nimbro_missionctrl_anymal_1_receiver" pkg="nimbro_topic_transport" type="receiver" output="screen" launch-prefix="gdb -ex run --args">
+	<node name="nimbro_missionctrl_anymal_1_receiver" pkg="nimbro_topic_transport" type="receiver" output="screen">
 		<!-- The port to receive packets on -->
-		<param name="port" 					value="17002" />
-		<param name="destination_port" 					value="17002" />
-		<param name="topic_prefix" 	value="/anymal_1" />
+		<param name="port" 											value="17001" />
+		<param name="topic_prefix" 							value="/anymal_1" />
 	</node>
 </launch>

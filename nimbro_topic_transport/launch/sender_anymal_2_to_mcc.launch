@@ -15,11 +15,11 @@
 	<arg name="target" default="localhost" />
 
 	<!-- The UDP sender node -->
-	<node name="sender" pkg="nimbro_topic_transport" type="sender" output="screen">
+	<node name="nimbro_anymal_missionctrl_sender" pkg="nimbro_topic_transport" type="sender" output="screen">
 
 		<!-- The destination host name or IP address -->
 		<param name="destination_addr" value="$(arg target)" />
-		<param name="port" value="17001" />
+		<param name="port" value="17052" />
 
 		<!-- Load the list of topics from a YAML file -->
 		<rosparam command="load" file="$(find nimbro_topic_transport)/launch/topics.yaml" />
