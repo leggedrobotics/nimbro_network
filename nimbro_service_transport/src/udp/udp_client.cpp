@@ -51,6 +51,7 @@ UDPClient::UDPClient()
  , m_counter(0)
 {
 	m_nh.param("port", m_remotePort, 5000);
+	m_nh.param("service_prefix", m_servicePrefix, std::string());
 
 	char portString[100];
 	snprintf(portString, sizeof(portString), "%d", m_remotePort);
@@ -121,7 +122,7 @@ UDPClient::UDPClient()
 		ops.helper = boost::make_shared<CallbackHelper>(name, this);
 		ops.req_datatype = ops.datatype + "Request";
 		ops.res_datatype = ops.datatype + "Response";
-		ops.service = name;
+		ops.service = m_servicePrefix + name;;
 
 		ROS_DEBUG("Advertising service '%s'", ops.service.c_str());
 
