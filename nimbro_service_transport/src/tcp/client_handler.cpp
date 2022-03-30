@@ -93,7 +93,7 @@ void ClientHandler::run()
 				ROS_INFO(" %d: 0x%02X (%c)", i, msg_request.buf.get()[i], msg_request.buf.get()[i]);
 #endif
 
-			ROS_INFO("[NimbroServiceTransport] Calling service '%s", service.c_str());
+			ROS_INFO("[NimbroTcpServiceTransport] Calling service '%s", service.c_str());
 		        bool ok = false;
 		        service_executed = false;
 		        auto service_start_time = std::chrono::system_clock::now();

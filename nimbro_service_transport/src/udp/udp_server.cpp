@@ -317,6 +317,7 @@ void UDPServer::RequestHandler::call()
 {
 	ros::ServiceClientOptions ops(service, "*", false, ros::M_string());
 	ros::ServiceClient client = ros::NodeHandle().serviceClient(ops);
+	ROS_INFO("[NimbroUdpServiceTransport] Calling service '%s", service.c_str());
 
 	ros::SerializedMessage msg_response;
 

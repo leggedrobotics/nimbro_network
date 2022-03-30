@@ -142,7 +142,7 @@ ServiceClient::ServiceClient()
 		ops.helper = boost::make_shared<CallbackHelper>(name, this);
 		ops.req_datatype = ops.datatype + "Request";
 		ops.res_datatype = ops.datatype + "Response";
-		ops.service = m_servicePrefix + name;;
+		ops.service = m_servicePrefix + name;
 
 		ROS_DEBUG("Advertising service '%s'", ops.service.c_str());
 
