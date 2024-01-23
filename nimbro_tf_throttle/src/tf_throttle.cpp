@@ -14,6 +14,7 @@ std::string g_framePrefix;
 
 boost::scoped_ptr<tf::TransformListener> g_tf;
 ros::Publisher pub;
+tf2_msgs::TFMessage lastMsg;
 
 void sendTransforms()
 {
@@ -55,6 +56,27 @@ void sendTransforms()
                     m.header.frame_id = g_framePrefix+"_"+m.header.frame_id;
                     m.child_frame_id = g_framePrefix+"_"+m.child_frame_id;
                 }
+
+		// Avoid publishing TF with repeated timestamps
+		auto lastM = std::find_if(lastMsg.transforms.begin(), lastMsg.transforms.end(), [&](const geometry_msgs::TransformStamped& t) {
+			return t.header.frame_id == m.header.frame_id && t.child_frame_id == m.child_frame_id;
+		});
+
+		if (lastM != lastMsg.transforms.end())
+		{
+			if (m.header.stamp <= lastM->header.stamp)
+			{
+				continue;
+			}
+			else
+			{
+				*lastM = m;
+			}
+		}
+		else
+		{
+			lastMsg.transforms.push_back(m);
+		}
 
 		msg.transforms.push_back(m);
 	}
